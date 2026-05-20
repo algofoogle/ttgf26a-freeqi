@@ -19,6 +19,8 @@
 // `define SPIN_LOGO
 // `define SIMPLE_LOGO_REVEAL
 
+`define HSLIDE_ANIM
+
 
 module tt_um_algofoogle_freeqi(
   input  wire [7:0] ui_in,    // Dedicated inputs
@@ -40,12 +42,17 @@ module tt_um_algofoogle_freeqi(
 
   wire line_end;
 
+  wire [AUDIO_BITS-1:0] sample_out;
+
   audio #(.B(AUDIO_BITS), .SUB(AUDIO_SUB)) synth (
     .clk(clk),
     .rst_n(rst_n),
     .frame_counter(frame_counter),
+    .h(h),
+    .v(v),
     .sample_clk(line_end),
-    .dac_out(dac_out)
+    .dac_out(dac_out),
+    .sample_out(sample_out)
   );
 
   // VGA signals
@@ -307,10 +314,16 @@ module tt_um_algofoogle_freeqi(
 
   // wire altgem = (gem_mode == 4) && (max_radius >= 32);
 
-  // wire [9:0] hslide = (&frame_counter[11:10]) ? (frame_counter[9:2] ^ {6{vlut[0]}}) : 0;
+`ifdef HSLIDE_ANIM
+  wire [9:0] hslide = (&frame_counter[11:10]) ? (frame_counter[9:2] ^ {6{vlut[0]}}) : 0;
+`endif//HSLIDE_ANIM
 
   gems #(.DOTBITS(DOTBITS)) gems1(
-    .h( (hstagger ? h+(1<<(DOTBITS-1)) : h)),// + hslide),
+`ifdef HSLIDE_ANIM
+    .h( (hstagger ? h+(1<<(DOTBITS-1)) : h) + hslide),
+`else
+    .h( (hstagger ? h+(1<<(DOTBITS-1)) : h)),
+`endif//HSLIDE_ANIM
     .v(v+counter),
     .counter(logo_revealed ? ~(counter+256) : 0), // Start animating dots after the logo has been fully-revealed.
     // .fmode(15),
