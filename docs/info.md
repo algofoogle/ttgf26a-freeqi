@@ -9,12 +9,17 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+Races the beam to create a VGA 640x480 60fps output, and generate some audio using a 1-bit sigma-delta DAC.
 
 ## How to test
 
-Explain how to use your project
+Attach a Tiny VGA PMOD adapter and Tiny Audio PMOD adapter, supply a ~25MHz clock, and reset the design. Watch and listen!
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+* Tiny VGA PMOD
+* Tiny Audio PMOD
+
+## Attribution
+
+By all means feel free to build upon this project with your own work, but please credit me (Anton Maurovic, https://github.com/algofoogle) as the original author.
